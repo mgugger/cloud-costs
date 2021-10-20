@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{title}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+  </head>
+  <body>
+    <p>Guten Tag</p>
+    <p>Nachfolgend finden Sie die Kosten Ihrer Cloud Accounts und Services für den Leistungszeitraum {from_date} - {to_date}.</p>
+    <p>
+    Kosten Total Pay-As-You-Go Accounts: CHF {payg_costs}
+    <br>
+    Kosten Total Reserved Instances in Cloud Accounts: CHF {ri_costs}
+    <br>
+    Kosten Total Managed Cloud Shared Services: CHF {total_service_costs}
+    </p>
+    <p>
+    Cloud Accounts:<br>
+    <ul>
+    {accounts}
+    </ul>
+    </p>
+
+    <p>
+    Managed Cloud Shared Services:<br>
+    <ul>
+    {services}
+    </ul>
+    </p>
+
+    <p>
+    Weitere Positionen:<br>
+    <ul>
+    {discounts}
+    </ul>
+    </p>
+
+    <p>Die Kosten werden mit der nächsten GroupIT Rechnung der Kostenstelle {cost_center} belastet. Dies ist lediglich ein Informationsmail.</p>
+    <p>Bitte beachten Sie, dass hier nur die angefallenen Kosten beim Public Cloud Provider aufgelistet sind. Die GroupIT erhebt einen prozentualen Zuschlag abhängig vom Servicetyp auf die untenstehenden Kosten für interne Aufwände.</p>
+
+    <p>Aufgrund von Rundungsdifferenzen kann der Totalbetrag minimal von den effektiv angegebenen Ressourcen- und Accountkosten abweichen.</p>
+
+    <p>Bei Fragen oder Unklarheiten können Sie sich gerne an {return_email} wenden.</p>
+
+    <p>Besten Dank & Freundliche Grüsse,<br>CloudCenterofExcellence Team</p>
+  </body>
+</html>

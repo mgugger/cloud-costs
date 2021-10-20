@@ -1,0 +1,29 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th scope="column-header">Service</th>
+            <th scope="column-header">Service Customer</th>
+            <th scope="column-header">Amount CHF</th>
+            <th scope="column-header">Details</th>
+          </tr>
+        </thead>
+        {% for service in services %}
+        <tr>
+          <td>{{ service['Service'] }}</td>
+          <td>{{ service['ServiceCustomer'] }}</td>
+          <td>{{ service['Amount'] }}</td>
+          <td><a href="{{ os.getenv('APPLICATION_ROOT', '/') }}/servicedetailview/?service_id={{ service['ServiceId'] }}">Link</a></td> 
+        </tr>
+        {% endfor %}
+        <tfoot>
+          <tr>
+            <th id="Total" colspan="2"><b>Total</b></th>
+            <td><b>{{ services | sum(attribute='Amount') }}</b></td>
+          </tr>
+         </tfoot>
+    </table>
+  </div>
+{% endblock %}

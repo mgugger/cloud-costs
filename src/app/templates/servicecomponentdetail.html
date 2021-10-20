@@ -1,0 +1,49 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+<p>
+  <form method="GET">
+    <label>Service</label>
+    <select name="service_component_id" onchange="this.form.submit()">
+        <option value=""></option>
+        {% for service_component in service_components %}
+        <option value="{{ service_component['id'] }}" {{ "selected" if str(service_component['id']) == selected_service_component_id }}>{{ service_component['name'] }}</option>
+        {% endfor %}
+    </select>
+  </form>
+</p>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+              <th scope="column-header">Service</th>
+              <th scope="column-header">ServiceComponent2Service</th>
+              <th scope="column-header">Quantity</th>
+              <th scope="column-header">TotalPrice</th>
+            </tr>
+          </thead>
+        {% for resource_cost in resource_costs %}
+        <tr>
+          <td>{{ resource_cost['Service'] }}</td>
+          <td>{{ resource_cost['ServicePart'] }}</td>
+          <td>{{ resource_cost['Quantity'] }}</td>
+          <td>{{ resource_cost['TotalPrice'] }}</td>
+        </tr>
+        {% endfor %}
+        <tfoot>
+          <tr>
+            <th id="earnings" colspan="3">Total Component Earning</th>
+            <td>{{ math.ceil(earnings) }}</td>
+          </tr>
+          <tr>
+            <th id="cost" colspan="3">Total Component Cost</th>
+            <td>{{ math.ceil(total_costs)}}</td>
+          </tr>
+          <tr>
+            <th id="net" colspan="3"><b>Net Win</b></th>
+            <td><b>{{ math.ceil(earnings) - math.ceil(total_costs) }}</b></td>
+          </tr>
+         </tfoot>
+    </table>
+  </div>
+{% endblock %}

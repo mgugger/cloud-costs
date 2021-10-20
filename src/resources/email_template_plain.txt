@@ -1,0 +1,26 @@
+Guten Tag
+
+Nachfolgend finden Sie die angefallenen Kosten Ihrer Cloud Accounts und Services für den Leistungszeitraum {from_date} - {to_date}.
+
+Kosten Total Pay-As-You-Go Accounts: CHF {payg_costs}\n
+Kosten Total Reserved Instances in Cloud Accounts: CHF {ri_costs}\n
+Kosten Total Managed Cloud Shared Services: CHF {total_service_costs}
+
+Cloud Accounts:
+{accounts}
+
+Managed Cloud Shared Services:
+{services}
+
+Weitere Positionen:
+{discounts}
+
+Die Kosten werden mit der nächsten GroupIT Rechnung der Kostenstelle {cost_center} belastet. Dies ist lediglich ein Informationsmail.
+Bitte beachten Sie, dass hier nur die angefallenen Kosten beim Public Cloud Provider aufgelistet sind. Die GroupIT erhebt einen prozentualen Zuschlag abhängig vom Servicetyp auf die untenstehenden Kosten für interne Aufwände.
+
+Aufgrund von Rundungsdifferenzen kann der Totalbetrag minimal von den effektiv angegebenen Ressourcen- und Accountkosten abweichen.
+
+Bei Fragen oder Unklarheiten können Sie sich gerne an {return_email} wenden.
+
+Besten Dank & Freundliche Grüsse,
+CloudCenterofExcellence Team

@@ -1,0 +1,53 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: $name
+  namespace: $namespace
+spec:
+  schedule: $cronjob_schedule 
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: cloud-billing
+          containers:
+          - name: $name
+            image: $image
+            resources:
+              requests:
+                cpu: "1" 
+                memory: 3Gi
+              limits:
+                cpu: "1" 
+                memory: 8Gi 
+            command: $command
+            env:
+            - name: APPLICATION_SETTINGS
+              value: $application_settings
+            - name: VAULT_MOUNT_POINT
+              valueFrom:
+                configMapKeyRef:
+                  name: cloud-billing
+                  key: vault_mount_point
+            - name: VAULT_SECRET_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: cloud-billing
+                  key: vault_secret_path
+            - name: VAULT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cloud-billing
+                  key: vault_url
+            - name: VAULT_ROLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: cloud-billing-secret
+                  key: vault_role_id
+            - name: VAULT_ROLE_SECRET_ID
+              valueFrom:
+                secretKeyRef:
+                  name: cloud-billing-secret
+                  key: vault_role_secret_id
+          restartPolicy: Never
+      backoffLimit: 0

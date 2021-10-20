@@ -1,0 +1,5 @@
+{% block body %}
+  <h4>Unauthorized</h4>
+  <p>Please <a href="/login/azure">login</a>, go the <a href="/">main page</a> or contact {{ os.environ['CCOE_EMAIL'] }}</p>
+  <p>{{ error }}</p>
+{% endblock %}

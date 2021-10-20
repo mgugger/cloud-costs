@@ -1,0 +1,1 @@
+{row}: CHF {costs} {additional_info}\n

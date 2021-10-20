@@ -1,0 +1,5 @@
+pytest==6.1.1
+pytest-dependency==0.4.0
+pytest-mock==1.10.4
+coverage
+pylint

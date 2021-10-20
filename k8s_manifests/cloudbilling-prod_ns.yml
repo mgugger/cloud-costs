@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cloudbilling-prod
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-networkpolicy
+  namespace: cloudbilling-prod
+spec:
+  podSelector:
+    matchLabels: # Match all pods in namespace, so communication within namespace will work
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector: {}
+    - namespaceSelector: # allow ingress-nginx namespace
+        matchLabels:
+          network-zone: dmz
+  egress:
+  - to:
+    - podSelector: {}
+  - to:
+    - podSelector: {}
+    - namespaceSelector: # allow ingress-nginx namespace
+        matchLabels:
+          network-zone: dmz
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: UDP
+      port: 53
+    - port: 53   # allow DNS resolution
+      protocol: TCP
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8 # disallow to internal systems
+    ports:
+    - port: 3306
+      protocol: TCP
+    - port: 443
+      protocol: TCP
+    - port: 587
+      protocol: TCP
+    - port: 1433
+      protocol: TCP
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/8
+    ports:
+    - port: 3306
+      protocol: TCP
+    - port: 443
+      protocol: TCP
+    - port: 587
+      protocol: TCP
+    - port: 1433
+      protocol: TCP

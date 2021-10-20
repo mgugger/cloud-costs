@@ -1,0 +1,8 @@
+__pycache__
+**/__pycache__/
+__pycache__/
+.pytest_cache
+.vscode
+cloud-billing.db
+Azure.csv
+ManagedCloudServices.csv

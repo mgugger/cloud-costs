@@ -1,0 +1,128 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: cloudbilling-prod
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    kubernetes.io/ingress.class: "nginx"
+  name: cloud-billing-prod
+spec:
+  tls:
+  - hosts:
+    - $host
+  rules:
+  - host: $host
+    http:
+      paths:
+      - backend:
+          serviceName: cloud-billing
+          servicePort: 5000
+        path: /
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-billing
+  namespace: cloudbilling-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudbilling-prod
+  template:
+    metadata:
+      labels:
+        app: cloudbilling-prod
+    spec:
+      serviceAccountName: cloud-billing
+      containers:
+      - name: cloud-billing
+        image: cuinfrastructure.azurecr.io/cloud-billing:latest
+        env:
+        - name: DEBUG
+          value: "False"
+        - name: "USE_MYSQL"
+          value: "True"
+        - name: "SEND_EMAILS"
+          value: "True"
+        - name: "AZURE_CLIENT_ID" # For OAUTH against Azure AD
+          value: "TODO"
+        - name: "AZURE_CLIENT_SECRET" # For OAUTH against Azure AD
+          value: "TODO"
+        - name: APPLICATION_SETTINGS
+          value: /env/prod.env
+        - name: APPLICATION_ROOT
+          value: /
+        - name: VAULT_MOUNT_POINT
+          valueFrom:
+            configMapKeyRef:
+              name: cloud-billing
+              key: vault_mount_point
+        - name: VAULT_SECRET_PATH
+          value: cloud-billing-prod
+        - name: VAULT_URL
+          valueFrom:
+            configMapKeyRef:
+              name: cloud-billing
+              key: vault_url
+        - name: VAULT_ROLE_ID
+          valueFrom:
+            secretKeyRef:
+              name: cloud-billing-secret
+              key: vault_role_id
+        - name: VAULT_ROLE_SECRET_ID
+          valueFrom:
+            secretKeyRef:
+              name: cloud-billing-secret
+              key: vault_role_secret_id
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-billing
+  namespace: cloudbilling-prod
+  annotations:
+    consul.hashicorp.com/service-port: "443"
+    consul.hashicorp.com/service-name: "billing"
+    consul.hashicorp.com/service-sync: "true"
+spec:
+  ports:
+  - port: 5000
+    targetPort: 5000
+    protocol: TCP
+  selector:
+    app: cloudbilling-prod
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cloud-billing
+  namespace: cloudbilling-prod
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+    name: cloud-billing-cluster-reader      
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-reader
+subjects:
+- kind: ServiceAccount
+  name: cloud-billing
+  namespace: cloudbilling-prod
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cloud-billing-namespace-admin
+  namespace: cloudbilling-prod
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: namespace-admin
+subjects:
+- kind: ServiceAccount
+  name: cloud-billing

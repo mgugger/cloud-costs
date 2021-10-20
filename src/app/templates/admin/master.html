@@ -1,0 +1,17 @@
+{% extends admin_base_template %}
+
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+{% endblock %}
+
+{% block tail %}
+  {{ super() }}
+ <div class="container">
+   <ul class="float-right">
+    <li>#SQL Queries: {{ sql_query_number }}</li>
+    <li>User: {{ user }}</li>
+    <li>User Roles: {{ user_roles }}</li>
+  </ul>
+ </div>
+{% endblock %}

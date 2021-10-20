@@ -1,0 +1,29 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+  <form method="POST">
+    <div class="form-group">
+      <label for="invoice_ids">Invoice</label>
+      <select multiple class="form-control" name="invoice_ids">
+          <option value=""></option>
+          {% for invoice in invoices %}
+          <option value="{{ invoice.id }}" {{ "selected" if str(invoice.id) == selected_invoice_id }}>{{ invoice.get_friendly_name() }}</option>
+          {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="servicecustomer_id">ServiceCustomer</label>
+      <select class="form-control" name="servicecustomer_id">
+        <option value=""></option>
+        {% for servicecustomer in servicecustomers %}
+        <option value="{{ servicecustomer.id }}" {{ "selected" if str(servicecustomer.id) == selected_servicecustomer_id }}>{{ servicecustomer.get_friendly_name() }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="override_email">Email address</label>
+      <input type="email" class="form-control" name="override_email" aria-describedby="emailHelp" placeholder="Enter email">
+      <small id="emailHelp" class="form-text text-muted">If specified, sends the email only to the specified email address instead of the service customers.</small>
+    </div>
+    <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure?')">Submit</button>
+  </form>
+{% endblock %}

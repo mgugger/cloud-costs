@@ -1,0 +1,44 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+<p>
+  <form method="GET">
+    <label>Invoice</label>
+    <select name="invoice_id" onchange="this.form.submit()">
+        <option value=""></option>
+        {% for invoice in invoices %}
+        <option value="{{ invoice.id }}" {{ "selected" if str(invoice.id) == selected_invoice_id }}>{{ invoice.get_friendly_name() }}</option>
+        {% endfor %}
+    </select>
+  </form>
+</p>
+<p>
+<label>Total Costs:&nbsp;</label>CHF {{ "{:,}".format(total_costs) }}
+</p>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+              <th scope="column-header">Service / Account</th>
+              <th scope="column-header">Cost Center</th>
+              <th scope="column-header">SAP Service Product Number</th>
+              <th scope="column-header">Price</th>
+            </tr>
+          </thead>
+          {% for line in lines %}
+          <tr>
+            <td>{{ line[0] }}</td>
+            <td>{{ line[1] }}</td>
+            <td>{{ line[3] }}</td>
+            <td>{{ line[4] }}</td>
+          </tr>
+          {% endfor %}
+          <tfoot>
+          <tr>
+            <th id="Total" colspan="3"><b>Total</b></th>
+            <td><b>{{ "{:,}".format(line_total) }}</b></td>
+          </tr>
+         </tfoot>
+    </table>
+  </div>
+{% endblock %}

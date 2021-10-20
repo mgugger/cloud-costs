@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloud-billing
+  namespace: cloudbilling-prod
+data:
+  vault_mount_point: TODO
+  vault_url: TODO # E.g. https://hashicorp.vault:8443
