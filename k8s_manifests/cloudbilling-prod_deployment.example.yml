@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace: cloudbilling-prod
@@ -15,9 +15,12 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: cloud-billing
-          servicePort: 5000
+          service:
+            name: cloud-billing
+            port: 
+              number: 5000
         path: /
+        pathType: ImplementationSpecific
 ---
 apiVersion: apps/v1
 kind: Deployment

@@ -1,4 +1,4 @@
-apiVersion: batch/v1beta1
+apiVersion: batch/v1 #kubernetes versions before 1.21.0 should use batch/v1beta1
 kind: CronJob
 metadata:
   name: $name
