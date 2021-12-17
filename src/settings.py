@@ -4,6 +4,7 @@ from peewee import MySQLDatabase, Proxy
 from playhouse.sqlite_ext import SqliteExtDatabase
 from src.constants import Constants
 
+
 class RecordCounter:
     _instance = None
     _count = 0
@@ -17,15 +18,19 @@ class RecordCounter:
         self._count += 1
         return self._count
 
+
 class ContextFilter(logging.Filter):
     def filter(self, record):
         record.record_number = RecordCounter().count()
         return True
 
+
 class Borg:
     _shared_state = {}
+
     def __init__(self):
         self.__dict__ = self._shared_state
+
 
 class Settings(Borg):
     def __init__(self):
@@ -39,24 +44,48 @@ class Settings(Borg):
             self.db_logger.addFilter(ContextFilter())
 
             # PEEWEE: Log Queries
-            #if os.getenv('DEBUG') == 'True':
+            # if os.getenv('DEBUG') == 'True':
             #    self.db_logger.addHandler(logging.StreamHandler())
-
 
     def init_db(self):
         if os.getenv('USE_IN_MEMORY_DB') == 'True':
             print("Running with In-Memory Backend")
-            self.db.initialize(SqliteExtDatabase(':memory:', regexp_function=True))
+            self.db.initialize(SqliteExtDatabase(
+                ':memory:', regexp_function=True))
         elif os.getenv('USE_MYSQL') == 'True':
             print("Running with Mysql Backend")
-            from src.helper.Secrets import get_secret
+            mysql_user = None
+            mysql_password = None
+            mysql_host = None
+            mysql_port = None
+            mysql_database = None
+            mysql_ssl = None
+
+            # Check if database settings provided by env vars
+            if 'MYSQL_DATABASE' in os.environ and 'MYSQL_USER' in os.environ and 'MYSQL_PASSWORD' in os.environ and 'MYSQL_HOST' in os.environ:
+                mysql_database = os.environ.get('MYSQL_DATABASE')
+                mysql_user = os.environ.get('MYSQL_USER')
+                mysql_password = os.environ.get('MYSQL_PASSWORD')
+                mysql_host = os.environ.get('MYSQL_HOST')
+                mysql_port = os.environ.get('MYSQL_PORT', 3306)
+                mysql_ssl = os.environ.get('MYSQL_SSL', True)
+            else:
+                # Load database settings from vault
+                from src.helper.Secrets import get_secret
+                mysql_database = get_secret('mysql_database_name')
+                mysql_user = get_secret('mysql_user')
+                mysql_password = get_secret('mysql_password')
+                mysql_host = get_secret('mysql_host')
+                mysql_port = 3306
+                mysql_ssl = True
+
             self.db.initialize(MySQLDatabase(
-                get_secret('mysql_database_name'),
-                user=get_secret('mysql_user'),
-                password=get_secret('mysql_password'),
-                host=get_secret('mysql_host'),
-                port=3306,
-                ssl=True
+                mysql_database,
+                user=mysql_user,
+                password=mysql_password,
+                host=mysql_host,
+                port=mysql_port,
+                ssl=mysql_ssl
             ))
         else:
             print("Running with Sqlite Backend")
@@ -85,10 +114,10 @@ class Settings(Borg):
 
     def get_provider_from_sap_service_product_nr(self, default_sap_service_product_nr):
         default_service_product_nrs = {
-            os.environ['Default_Constants_AzureProvider'] : Constants.AzureProvider,
-            os.environ['Default_Constants_AWSProvider'] : Constants.AwsProvider,
-            os.environ['Default_Constants_ManagedCloudServices'] : Constants.ManagedCloudServices,
-            os.environ['Default_Constants_GCPProvider'] : Constants.GCPProvider
+            os.environ['Default_Constants_AzureProvider']: Constants.AzureProvider,
+            os.environ['Default_Constants_AWSProvider']: Constants.AwsProvider,
+            os.environ['Default_Constants_ManagedCloudServices']: Constants.ManagedCloudServices,
+            os.environ['Default_Constants_GCPProvider']: Constants.GCPProvider
         }
 
         return default_service_product_nrs.get(default_sap_service_product_nr)

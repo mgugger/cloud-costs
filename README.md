@@ -1,3 +1,22 @@
+- [Cloud Billing](#cloud-billing)
+- [Sample Use Case](#sample-use-case)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Install & Run](#install--run)
+  - [Requirements](#requirements)
+  - [Install Requirements on Ubuntu](#install-requirements-on-ubuntu)
+  - [Install Python Packages Requirements](#install-python-packages-requirements)
+  - [Run locally with sqlite](#run-locally-with-sqlite)
+  - [Run with external MySQL](#run-with-external-mysql)
+    - [Load settings from env](#load-settings-from-env)
+    - [Load settings form HashiCorp Vault](#load-settings-form-hashicorp-vault)
+  - [Run Tests and Coverage](#run-tests-and-coverage)
+- [Configuration](#configuration)
+- [Deployment](#deployment)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+
 # Cloud Billing
 
 This project aggregates the costs public cloud resources by accounts, services and tags by importing the invoices from public cloud providers and exporting their aggregates in CSV (or another format).
@@ -57,6 +76,37 @@ python run.py -e ./env/dev.env run
 
 # Now create an invoice csv file for the managed services and check the ManagedCloudServices.csv file on the local filesystem:
 python run.py -e env/dev.env bill ManagedCloudServices -n bill_msc
+```
+
+## Run with external MySQL
+
+It is possible to run the application with an external MySQL database. \
+
+### Load settings from env
+Set the following environment variables.
+```env
+USE_MYSQL=True
+MYSQL_USER=user
+MYSQL_PASSWORD=password
+MYSQL_HOST=host
+MYSQL_DATABASE=database_name
+MYSQL_PORT=3306
+MYSQL_SSL=True
+```
+
+### Load settings form HashiCorp Vault
+The following environment variable needs to be set:
+```env
+USE_VAULT=True
+USE_MYSQL=True
+```
+
+And the bellow listed secrets created inside HashiCorp Vault:
+```
+mysql_database_name
+mysql_user
+mysql_password
+mysql_host
 ```
 
 ## Run Tests and Coverage
