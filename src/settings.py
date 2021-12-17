@@ -50,12 +50,12 @@ class Settings(Borg):
     def init_db(self):
         if os.getenv('USE_IN_MEMORY_DB') == 'True':
             print("Running with In-Memory Backend")
-            from src.helper.Secrets import get_secret
             self.db.initialize(SqliteExtDatabase(
                 ':memory:', regexp_function=True))
         elif os.getenv('USE_MYSQL') == 'True':
             print("Running with Mysql Backend")
             # Load data from env / vault
+            from src.helper.Secrets import get_secret
             mysql_user = os.environ.get('MYSQL_USER', get_secret('mysql_user'))
             mysql_password = os.environ.get(
                 'MYSQL_PASSWORD', get_secret('mysql_password'))
