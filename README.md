@@ -80,7 +80,9 @@ python run.py -e env/dev.env bill ManagedCloudServices -n bill_msc
 
 ## Run with external MySQL
 
-It is possible to run the application with an external MySQL database. \
+It is possible to run the application with an external MySQL database.
+
+**Note**: Env vars take precedence of HashiCorp Vault vars. Therefore, a mix of env and HashiCorp Vault vars is possible
 
 ### Load settings from env
 Set the following environment variables.
