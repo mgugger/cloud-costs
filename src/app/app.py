@@ -8,6 +8,7 @@ from src.app.views import *
 from src.app.api.kpi import kpi_api
 from src.app.api.grafana import grafana_api
 from src.app.api.auth import auth_api,oauth
+from src.app.api.sample_api import sample_api
 from src.helper.User import current_user,current_user_roles
 
 def _db_connect():
@@ -51,6 +52,7 @@ def create_app():
     app.register_blueprint(kpi_api, url_prefix=application_root)
     app.register_blueprint(grafana_api, url_prefix=application_root)
     app.register_blueprint(auth_api, url_prefix=application_root)
+    app.register_blueprint(sample_api, url_prefix=application_root)
 
     app.config['FLASK_ADMIN_SWATCH'] = 'simplex'
 

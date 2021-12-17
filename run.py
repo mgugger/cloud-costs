@@ -47,7 +47,7 @@ def load_env(args):
         load_dotenv(dotenv_path=os.environ['APPLICATION_SETTINGS'])
         print('loaded env from APPLICATION_SETTINGS environment file')
     else:
-        print("No application environments provided")
+        print("No application environment provided")
 
 if __name__ == "__main__":
     # Arg Parse   
