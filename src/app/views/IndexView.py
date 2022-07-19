@@ -30,7 +30,7 @@ class IndexView(AdminIndexView):
         if accounts_without_customer > 0:
             todos.append({
                 "name": "Missing ServiceCustomer in Account",
-                "description": f"{accounts_without_customer} Accounts do not have a ServiceCustomer assigned"
+                "description": f"{accounts_without_customer} Account(s) without ServiceCustomer assigned"
             })
 
         services_without_customer = Service \
@@ -40,7 +40,7 @@ class IndexView(AdminIndexView):
         if services_without_customer > 0:
             todos.append({
                 "name": "Missing ServiceCustomer in Service",
-                "description": f"{services_without_customer} Services do not have a ServiceCustomer assigned"
+                "description": f"{services_without_customer} Service(s) without assigned ServiceCustomer"
             })
         service_component_without_service = ServiceComponent \
             .select() \
@@ -50,7 +50,7 @@ class IndexView(AdminIndexView):
         if service_component_without_service > 0:
             todos.append({
                 "name": "Unattached ServiceComponent",
-                "description": f"{service_component_without_service} ServiceComponent do not have a ServiceComponent2Service connection"
+                "description": f"{service_component_without_service} ServiceComponent(s) with missing ServiceComponent2Service connection"
             })
 
         sc2s_without_service = ServiceComponent2Service \
@@ -60,7 +60,7 @@ class IndexView(AdminIndexView):
         if sc2s_without_service > 0:
             todos.append({
                 "name": "Unattached ServiceComponent2Service",
-                "description": f"{sc2s_without_service} ServiceComponent2Service do not have a Service connection"
+                "description": f"{sc2s_without_service} ServiceComponent2Service(s) without assigned Service"
             })
 
         regex = re.compile(r'[\d]{7}-\d{10}$')
@@ -73,7 +73,7 @@ class IndexView(AdminIndexView):
         if len(invalid_costcenters) > 0:
             todos.append({
                 "name": "Wrong CostCenter",
-                "description": f"{len(invalid_costcenters)} ServiceCustomers have an invalid cost center: {invalid_costcenters}"
+                "description": f"{len(invalid_costcenters)} ServiceCustomer(s) with invalid cost center: {invalid_costcenters}"
             })
 
         data_imports_this_month = DataImport.select(DataImport.data_import_key) \

@@ -54,41 +54,45 @@ def create_app():
     app.register_blueprint(auth_api, url_prefix=application_root)
     app.register_blueprint(sample_api, url_prefix=application_root)
 
-    app.config['FLASK_ADMIN_SWATCH'] = 'simplex'
+    admin = Admin(app, name='CloudCosts', index_view=IndexView(url=application_root), template_mode='bootstrap4')
 
-    admin = Admin(app, name='Cloud Billing', index_view=IndexView(url=application_root), template_mode='bootstrap4')
+    customers_category = "Customers"
+    admin.add_view(ServiceCustomerView(ServiceCustomer, category=customers_category))
+    admin.add_view(ServiceCustomerReadOnly(ServiceCustomer, category=customers_category, endpoint="sc_readonly"))
+    admin.add_view(ServiceView(Service, category=customers_category))
+    admin.add_view(AccountView(Account, category=customers_category))
+    admin.add_view(AccountViewReadOnly(Account, category=customers_category, endpoint="acc_readonly"))
 
-    admin.add_view(AccountView(Account, category="Services"))
-    admin.add_view(AccountViewReadOnly(Account, category="Services", endpoint="acc_readonly"))
-    admin.add_view(ServiceCustomerView(ServiceCustomer, category="Customers"))
-    admin.add_view(ServiceCustomerReadOnly(ServiceCustomer, category="Customers", endpoint="sc_readonly"))
-    admin.add_view(AdditionalInvoicePositionView(AdditionalInvoicePosition, category="Customers"))
+    services_category = "Service Components"
+    admin.add_view(ServiceViewReadOnly(Service, category=services_category, endpoint="srv_readonly"))
+    admin.add_view(ServiceComponent2ServiceView(ServiceComponent2Service, category=services_category))
+    admin.add_view(ServiceComponent2ServiceViewReadOnly(ServiceComponent2Service, category=services_category, endpoint="sc2s_readonly"))
+    admin.add_view(ServiceComponentView(ServiceComponent, category=services_category))
+    admin.add_view(ServiceComponentViewReadOnly(ServiceComponent, category=services_category, endpoint="scomp_readonly"))
+    admin.add_view(ServiceComponentPartView(ServiceComponentPart, category=services_category))
+    admin.add_view(AdditionalInvoicePositionView(AdditionalInvoicePosition, category=services_category))
 
-    admin.add_view(ServiceView(Service, category="Services"))
-    admin.add_view(ServiceViewReadOnly(Service, category="Services", endpoint="srv_readonly"))
-    admin.add_view(ServiceComponent2ServiceView(ServiceComponent2Service, category="Services"))
-    admin.add_view(ServiceComponent2ServiceViewReadOnly(ServiceComponent2Service, category="Services", endpoint="sc2s_readonly"))
-    admin.add_view(ServiceComponentView(ServiceComponent, category="Services"))
-    admin.add_view(ServiceComponentViewReadOnly(ServiceComponent, category="Services", endpoint="scomp_readonly"))
-    admin.add_view(ServiceComponentPartView(ServiceComponentPart, category="Services"))
+    import_export_category = "Import/Export"
+    admin.add_view(InvoiceView(Invoice, category=import_export_category))
+    admin.add_view(DataImportView(DataImport, category=import_export_category))
 
-    admin.add_view(InvoiceView(Invoice, category="Import/Export"))
-    admin.add_view(DataImportView(DataImport, category="Import/Export"))
+    cost_detail_category = "Cost Details"
+    admin.add_view(UninvoicedAccounts(name='Uninvoiced Accounts', category=cost_detail_category))
+    admin.add_view(AbsoluteServiceCostEstimation(name='Service Price Estimation', category=cost_detail_category))
+    admin.add_view(ServiceComponentCosts(name='Service Component Cost', category=cost_detail_category))
+    admin.add_view(ServiceDetailView(name='Service Detail', category=cost_detail_category))
+    admin.add_view(ServiceComponentDetailView(name='Service Component Detail', category=cost_detail_category))
+    admin.add_view(InvoiceDetailView(name='Invoice Detail', category=cost_detail_category))
+    admin.add_view(InvoiceOverTimeView(name='Invoices over time', category=cost_detail_category))
+    admin.add_view(NetProfitView(name='Net Profit', category=cost_detail_category))
 
-    admin.add_view(UninvoicedAccounts(name='Uninvoiced Accounts', category="Stats"))
-    admin.add_view(AbsoluteServiceCostEstimation(name='Service Price Estimation', category="Stats"))
-    admin.add_view(ServiceComponentCosts(name='Service Component Cost', category="Stats"))
-    admin.add_view(ServiceDetailView(name='Service Detail', category="Stats"))
-    admin.add_view(ServiceComponentDetailView(name='Service Component Detail', category="Stats"))
-    admin.add_view(InvoiceDetailView(name='Invoice Detail', category="Stats"))
-    admin.add_view(InvoiceOverTimeView(name='Invoices over time', category="Stats"))
-    admin.add_view(NetProfitView(name='Net Profit', category="Stats"))
+    config_category = "Configuration"
+    admin.add_view(JobView(Job, category=config_category))
+    admin.add_view(ServiceTypeView(ServiceType, category=config_category))
+    admin.add_view(ConfigView(Config, category=config_category))
 
-    admin.add_view(JobView(Job, category="Config"))
-    admin.add_view(ServiceTypeView(ServiceType, category="Config"))
-    admin.add_view(ConfigView(Config, category="Config"))
-
-    admin.add_view(ResendEmailView(name='Resend Email', category="Tools"))
+    tasks_category = "Tasks"
+    admin.add_view(ResendEmailView(name='Resend Email', category=tasks_category))
 
     admin.add_link(LogoutMenuLink(name='Logout', category='', url="/logout"))
     admin.add_link(LoginMenuLink(name='Login', category='', url="/login/azure"))
