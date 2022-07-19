@@ -23,14 +23,17 @@ class AwsImport(ImportBase):
         ]
 
     def get_files(self):
-        s3 = boto3.resource('s3',
-            aws_access_key_id=self.get_secret(self.SECRETS[0]),
-            aws_secret_access_key=self.get_secret(self.SECRETS[1])
-        )
-        my_bucket = s3.Bucket('billing-m')
-        folder_prefix = f"DailyAWSBillingReport/AWSBilling/{LASTMONTH.strftime('%Y%m%d')}-{FIRSTDAY.strftime('%Y%m%d')}"
-        print('Looking in folder {}'.format(folder_prefix))
-        return [csv for csv in my_bucket.objects.filter(Prefix=folder_prefix) if csv.key.endswith('.csv.zip')]
+        if os.getenv('PROCESS_SAMPLE_FILES') == 'True':
+            return ['sample_files/AWSBilling/20190601-20190701/AWSBilling-00001.csv.zip']
+        else:
+            s3 = boto3.resource('s3',
+                aws_access_key_id=self.get_secret(self.SECRETS[0]),
+                aws_secret_access_key=self.get_secret(self.SECRETS[1])
+            )
+            my_bucket = s3.Bucket('billing-m')
+            folder_prefix = f"DailyAWSBillingReport/AWSBilling/{LASTMONTH.strftime('%Y%m%d')}-{FIRSTDAY.strftime('%Y%m%d')}"
+            print('Looking in folder {}'.format(folder_prefix))
+            return [csv for csv in my_bucket.objects.filter(Prefix=folder_prefix) if csv.key.endswith('.csv.zip')]
 
     def extract_zip(self, input_zip):
         input_zip=zipfile.ZipFile(input_zip)

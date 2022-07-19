@@ -24,7 +24,7 @@ class AzureMarketPlaceImport(ImportBase):
 
     def get_files(self):
         if os.getenv('PROCESS_SAMPLE_FILES') == 'True':
-            return ['sample_files/azureMarketplace.json']
+            return ['sample_files/azureMarketPlace.json']
         else:
             return ['marketplacechargesbycustomdate?startTime=' + LASTMONTH_FIRSTDAY.strftime("%Y-%m-%d") + "&endTime=" + LASTMONTH_LASTDAY.strftime("%Y-%m-%d")]
 

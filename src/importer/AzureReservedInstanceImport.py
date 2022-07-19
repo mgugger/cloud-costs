@@ -23,7 +23,10 @@ class AzureReservedInstanceImport(ImportBase):
         ]
 
     def get_files(self):
-        return [f'reservationcharges?startDate={str(LASTMONTH.year)}-{LASTMONTH.month:02d}-01T00:00:00Z&endDate={str(LASTMONTH.year)}-{LASTMONTH.month:02d}-{str(MONTHRANGE[1])}T23:59:59Z']
+        if os.getenv('PROCESS_SAMPLE_FILES') == 'True':
+            return ['sample_files/azureReservedInstance.json']
+        else:
+            return [f'reservationcharges?startDate={str(LASTMONTH.year)}-{LASTMONTH.month:02d}-01T00:00:00Z&endDate={str(LASTMONTH.year)}-{LASTMONTH.month:02d}-{str(MONTHRANGE[1])}T23:59:59Z']
 
     def run_import(self, file_to_import):
         if os.getenv('PROCESS_SAMPLE_FILES') == 'True':
