@@ -11,6 +11,11 @@ from src.app.api.auth import auth_api,oauth
 from src.app.api.sample_api import sample_api
 from src.helper.User import current_user,current_user_roles
 
+currency = os.environ.get('currency', default="CHF")
+
+def format_currency(value):
+    return "{} {:,.2f}".format(currency, value)
+
 def _db_connect():
     try:
         Settings().db.connect(reuse_if_open=True)
@@ -43,6 +48,8 @@ def create_app():
     app.context_processor(context_processor)
     app.teardown_appcontext(_db_close)
     app.register_error_handler(403, handle_403)
+
+    app.add_template_filter(format_currency)
 
     application_root = os.getenv('APPLICATION_ROOT', '/')
     app.config["APPLICATION_ROOT"] = application_root

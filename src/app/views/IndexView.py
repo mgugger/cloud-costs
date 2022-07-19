@@ -50,7 +50,7 @@ class IndexView(AdminIndexView):
         if service_component_without_service > 0:
             todos.append({
                 "name": "Unattached ServiceComponent",
-                "description": f"{service_component_without_service} ServiceComponent(s) with missing ServiceComponent2Service connection"
+                "description": f"{service_component_without_service} ServiceComponent(s) with missing ServiceComponent2Service"
             })
 
         sc2s_without_service = ServiceComponent2Service \

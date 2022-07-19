@@ -3,7 +3,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col" style="display: inline-block; position: relative; max-width: 30%; max-height: 30%;">
+    <div class="col" style="display: inline-block; position: relative; max-width: 40%; max-height: 40%;">
       <canvas id="myChart" width="400" height="400"></canvas>
       <script>
         const ctx = document.getElementById('myChart').getContext('2d');
@@ -40,13 +40,13 @@
             {% for invoice in imported_invoices %}
             <tr>
               <td>{{ invoice['provider'] }}</td>
-              <td>{{ math.ceil(invoice['amount']) }}</td>
+              <td>{{ invoice['amount'] | format_currency}}</td>
               <td>{{ invoice['last_import_date'] }}</td>
             </tr>
             {% endfor %}
             <tr>
               <td><strong>Total Costs</strong></td>
-              <td><strong>{{ math.ceil(imported_invoices | sum(attribute='amount')) }}</strong></td>
+              <td><strong>{{ imported_invoices | sum(attribute='amount') | format_currency }}</strong></td>
               <td></td>
             </tr>
           </table>
