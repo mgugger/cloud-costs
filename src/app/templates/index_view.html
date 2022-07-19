@@ -1,46 +1,76 @@
 {% extends 'admin/master.html' %}
 {% block body %}
-  <h4>Todos</h4>
-  <div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-        <tr>
-          <th scope="column-header">Todo</th>
-          <th scope="column-header">Description</th>
-        </tr>
-      </thead>
-    {% for todo in todos %}
-    <tr>
-      <td>{{ todo['name'] }}</td>
-      <td>{{ todo['description'] }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-  </div>
 
-  <h4>Imported Invoices</h4>
-  <div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-        <tr>
-          <th scope="column-header">Provider</th>
-          <th scope="column-header">Amount</th>
-          <th scope="column-header">Last Import Date</th>
-        </tr>
-      </thead>
-    {% for invoice in imported_invoices %}
-    <tr>
-      <td>{{ invoice['provider'] }}</td>
-      <td>{{ math.ceil(invoice['amount']) }}</td>
-      <td>{{ invoice['last_import_date'] }}</td>
-    </tr>
-    {% endfor %}
-    <tr>
-        <td><strong>Total Costs</strong></td>
-        <td><strong>{{ math.ceil(imported_invoices | sum(attribute='amount')) }}</strong></td>
-        <td></td>
-      </tr>
-  </table>
+<div class="row">
+  <div class="col" style="display: inline-block; position: relative; max-width: 30%; max-height: 30%;">
+    <canvas id="myChart" width="400" height="400"></canvas>
+    <script>
+      const ctx = document.getElementById('myChart').getContext('2d');
+      const myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ["{{ imported_invoices | map(attribute='provider') | join('\",\"') | safe }}"],
+          datasets: [{
+            label: 'My First Dataset',
+            data: [{{ imported_invoices | map(attribute = 'amount') | join(',') }} ],
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)'
+        ],
+        hoverOffset: 4
+      }]
+    }
+  });
+    </script>
   </div>
+  <div class="col">
+    <div class="row">
+      <h4>Imported Invoices</h4>
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+          <thead>
+            <tr>
+              <th scope="column-header">Provider</th>
+              <th scope="column-header">Amount</th>
+              <th scope="column-header">Last Import Date</th>
+            </tr>
+          </thead>
+          {% for invoice in imported_invoices %}
+          <tr>
+            <td>{{ invoice['provider'] }}</td>
+            <td>{{ math.ceil(invoice['amount']) }}</td>
+            <td>{{ invoice['last_import_date'] }}</td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <td><strong>Total Costs</strong></td>
+            <td><strong>{{ math.ceil(imported_invoices | sum(attribute='amount')) }}</strong></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+
+      <h4>Todos</h4>
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+          <thead>
+            <tr>
+              <th scope="column-header">Todo</th>
+              <th scope="column-header">Description</th>
+            </tr>
+          </thead>
+          {% for todo in todos %}
+          <tr>
+            <td>{{ todo['name'] }}</td>
+            <td>{{ todo['description'] }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 
 {% endblock %}
