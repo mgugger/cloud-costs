@@ -40,13 +40,13 @@
           <td>{{ resource_cost['UnitPrice'] }}</td>
           <td>{{ resource_cost['RelativePrice'] }}</td>
           <td>{{ resource_cost['FixedPrice'] }}</td>
-          <td>{{ resource_cost['TotalPrice'] }}</td>
+          <td>{{ resource_cost['TotalPrice'] | format_currency }}</td>
         </tr>
         {% endfor %}
         <tfoot>
             <tr>
               <th id="Total" colspan="6"><b>Total to be invoiced</b></th>
-              <td><b>{{ math.ceil(total_costs) if total_costs }}</b></td>
+              <td><b>{{ (math.ceil(total_costs) if total_costs)  }}</b></td>
             </tr>
            </tfoot>
     </table>

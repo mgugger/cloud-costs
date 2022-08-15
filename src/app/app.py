@@ -14,7 +14,9 @@ from src.helper.User import current_user,current_user_roles
 currency = os.environ.get('currency', default="CHF")
 
 def format_currency(value):
-    return "{} {:,.2f}".format(currency, value)
+    if value:
+        return "{} {:,.2f}".format(currency, value)
+    return ""
 
 def _db_connect():
     try:
@@ -61,7 +63,7 @@ def create_app():
     app.register_blueprint(auth_api, url_prefix=application_root)
     app.register_blueprint(sample_api, url_prefix=application_root)
 
-    admin = Admin(app, name='CloudCosts', index_view=IndexView(url=application_root), template_mode='bootstrap4')
+    admin = Admin(app, name='CloudServiceCosts', index_view=IndexView(url=application_root), template_mode='bootstrap4')
 
     customers_category = "Customers"
     admin.add_view(ServiceCustomerView(ServiceCustomer, category=customers_category))
@@ -79,11 +81,11 @@ def create_app():
     admin.add_view(ServiceComponentPartView(ServiceComponentPart, category=services_category))
     admin.add_view(AdditionalInvoicePositionView(AdditionalInvoicePosition, category=services_category))
 
-    import_export_category = "Import/Export"
+    import_export_category = "Data Import/Export"
     admin.add_view(InvoiceView(Invoice, category=import_export_category))
     admin.add_view(DataImportView(DataImport, category=import_export_category))
 
-    cost_detail_category = "Cost Details"
+    cost_detail_category = "Cost Analysis"
     admin.add_view(UninvoicedAccounts(name='Uninvoiced Accounts', category=cost_detail_category))
     admin.add_view(AbsoluteServiceCostEstimation(name='Service Price Estimation', category=cost_detail_category))
     admin.add_view(ServiceComponentCosts(name='Service Component Cost', category=cost_detail_category))
